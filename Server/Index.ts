@@ -11,9 +11,11 @@ app.get('/', (req: Request, res: Response) => {``
     res.send({ message: 'Server is active', timestamp: new Date() }); 
 });
 
+/** Broker listen to all subscribers and manage protocol */
 io.on('connection', (socket: any) => {
-    console.log(socket)
     console.log('a user connected');
+    socket.emit(' new user joined ')
+
     /** User subscribe and publish protocol */
     socket.on("user:subscribe", (resp: any) => {
         socket.join("subscribers");
@@ -36,6 +38,7 @@ io.on('connection', (socket: any) => {
     
 });
 
+/** Launch server and listen on given port */
 try {
     server.listen(port, (): void => {
         console.log(`Server is active at http://localhost:${port}`);
