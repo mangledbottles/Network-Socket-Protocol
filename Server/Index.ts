@@ -1,4 +1,4 @@
-import express, { Application, NextFunction, Request, Response, Router } from "express";
+import express, { Application, Request, Response } from "express";
 const app: Application = express();
 const port: string = '8080';
 
