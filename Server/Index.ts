@@ -1,46 +1,37 @@
 import express, { Application, Request, Response } from "express";
+import dgram from "dgram";
 const app: Application = express();
-const port: string = '8080';
+const port: number = 8080;
 
-const server = require('http').createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-
-/** HTTP Server for checking if online */
-app.get('/', (req: Request, res: Response) => {``
-    res.send({ message: 'Server is active', timestamp: new Date() }); 
-});
+const Server = dgram.createSocket('udp4');
 
 /** Broker listen to all subscribers and manage protocol */
-io.on('connection', (socket: any) => {
-    console.log('a user connected');
-    socket.emit(' new user joined ')
 
-    /** User subscribe and publish protocol */
-    socket.on("user:subscribe", (resp: any) => {
-        socket.join("subscribers");
-        socket.to("subscribers", "new user")
-        io.emit('publish: new user has subscribed to the protocol', { resp });
-        console.log({ message: 'user subscribe', resp })
-    });
 
-    /** Broker publish to all subscribers */
-    socket.on("dashboard:publish", (resp: any) => {
-        // TODO: Implement Authentication
-        socket.emit('publish', ' message from dashboard');
-        console.log({ message: 'dashboard publish', resp})
-    })
+Server.on('error', (err) => {
+    console.log(`server error:\n${err.stack}`);
+    Server.close();
+  });
 
-    /** Handle user disconnect */
-    socket.on("disconnect", () => {
-        console.log("a user disconnected")
-    })
-    
+Server.on('message', (msg, rinfo) => {
+    console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 });
+
+
+
+  
 
 /** Launch server and listen on given port */
 try {
-    server.listen(port, (): void => {
+
+    Server.on('listening', () => {
+        const address = Server.address();
+        console.log({ Server })
+        console.log(`server listening ${address.address}:${address.port}`);
+      });
+
+      
+    Server.bind(port, (): void => {
         console.log(`Server is active at http://localhost:${port}`);
     });
 } catch (error: any) {
