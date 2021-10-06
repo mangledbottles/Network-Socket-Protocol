@@ -14,6 +14,13 @@ app.get('/', (req: Request, res: Response) => {``
 io.on('connection', (socket: any) => {
     console.log(socket)
     console.log('a user connected');
+    /** User subscribe and publish protocol */
+    socket.on("user:subscribe", (resp: any) => {
+        socket.join("subscribers");
+        socket.to("subscribers", "new user")
+        io.emit('publish: new user has subscribed to the protocol', { resp });
+        console.log({ message: 'user subscribe', resp })
+    });
 });
 
 try {
