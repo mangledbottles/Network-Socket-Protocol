@@ -21,6 +21,13 @@ io.on('connection', (socket: any) => {
         io.emit('publish: new user has subscribed to the protocol', { resp });
         console.log({ message: 'user subscribe', resp })
     });
+
+    /** Broker publish to all subscribers */
+    socket.on("dashboard:publish", (resp: any) => {
+        // TODO: Implement Authentication
+        socket.emit('publish', ' message from dashboard');
+        console.log({ message: 'dashboard publish', resp})
+    })
 });
 
 try {
