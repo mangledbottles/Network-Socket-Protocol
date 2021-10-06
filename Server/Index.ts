@@ -28,6 +28,12 @@ io.on('connection', (socket: any) => {
         socket.emit('publish', ' message from dashboard');
         console.log({ message: 'dashboard publish', resp})
     })
+
+    /** Handle user disconnect */
+    socket.on("disconnect", () => {
+        console.log("a user disconnected")
+    })
+    
 });
 
 try {
