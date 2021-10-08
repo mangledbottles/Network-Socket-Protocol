@@ -1,6 +1,12 @@
 import dgram from "dgram";
 const port: number = 8081;
 
+import express, { Application, Request, Response } from "express";
+const app: Application = express();
+app.get('/', (req: Request, res: Response) => {``
+    res.send({ message: 'Server is active', timestamp: new Date() }); 
+});
+
 const Server = dgram.createSocket('udp4');
 
 /** Broker listen to all subscribers and manage protocol */
@@ -33,6 +39,8 @@ try {
 
   Server.bind(port, (): void => {
     console.log(`Server is active at http://localhost:${port}`);
+  app.listen(8081, (): void => {
+    console.log(`HTTP Server is active at http://localhost:8081`);
   });
 } catch (error: any) {
   console.error(`An error occurred with message ${error.toString()}`);
