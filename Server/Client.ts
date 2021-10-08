@@ -1,6 +1,6 @@
 import dgram from 'dgram';
 import { Buffer } from 'buffer';
-const port: number = 8081;
+const port: number = 8080;
 
 const message = Buffer.from('UDP IOT CONNETION DATA');
 const client = dgram.createSocket('udp4');
