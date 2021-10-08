@@ -1,5 +1,5 @@
 import dgram from "dgram";
-const port: number = 8081;
+const port: number = 8080;
 
 import express, { Application, Request, Response } from "express";
 const app: Application = express();
@@ -38,7 +38,9 @@ try {
 
 
   Server.bind(port, (): void => {
-    console.log(`Server is active at http://localhost:${port}`);
+    console.log(`UDP Datagram Server is active at http://localhost:${port}`);
+  });
+
   app.listen(8081, (): void => {
     console.log(`HTTP Server is active at http://localhost:8081`);
   });
