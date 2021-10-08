@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run dev",
     "build": "npm run clean && tsc",
-    "dev": "nodemon Index.ts",
+    "server": "nodemon Server.ts",
+    "client": "nodemon Client.ts",
     "dev-js": "nodemon Index.js",
     "clean": "rimraf ./dist",
     "reset": "git pull && git checkout . && npm i && npm run build"
