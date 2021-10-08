@@ -8,7 +8,6 @@
     "build": "npm run clean && tsc",
     "server": "nodemon Server.ts",
     "client": "nodemon Client.ts",
-    "dev-js": "nodemon Index.js",
     "clean": "rimraf ./dist",
     "reset": "git pull && git checkout . && npm i && npm run build"
   },
