@@ -15,21 +15,18 @@ Server.on('message', (msg, rinfo) => {
 
   Server.send(msg, rinfo.port, 'localhost', function (error) {
     if (error) {
-      console.log('Error sending data to Client')
+      console.log(`Error sending data to Client #${rinfo.port}`)
     } else {
-      console.log('Data sent to Client');
+      console.log(`Data sent to Client #${rinfo.port}`);
     }
   });
 });
-
-
 
 /** Launch server and listen on given port */
 try {
 
   Server.on('listening', () => {
     const address = Server.address();
-    console.log({ Server })
     console.log(`Server listening ${address.address}:${address.port}`);
   });
 
