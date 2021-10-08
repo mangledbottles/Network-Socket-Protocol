@@ -25,7 +25,6 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "dgram": "^1.0.1",
     "express": "^4.17.1"
   }
 }
