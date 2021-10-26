@@ -41,6 +41,8 @@ Server.on('message', (msg, rinfo) => {
   });
 });
 
+
+/** Periodically Broadcast Information from Server to all Clients */
 interface Client {
   address: string;
   port: number;
@@ -51,6 +53,26 @@ let Clients: Set<string> = new Set();
 function newClient({ address, port }: Client) {
   return JSON.stringify({ address, port });
 }
+
+function broadcast() {
+  console.log("Broadcasting message to all Clients")
+
+  var message = Buffer.from("Server instructions to all Clients");
+  const ClientList = Array.from(Clients);
+  for (let clientNumber in ClientList) {
+    const { address, port } = JSON.parse(ClientList[clientNumber]);
+
+    Server.send(message, 0, message.length, port, address, (error) => {
+      if (error) {
+        console.log(`Broadcast Error sending data to Client #${port}`)
+      } else {
+        console.log(`Broadcast Data sent to Client #${port}`);
+      }
+    });
+
+  }
+}
+
 /** Launch UDP Socket and HTTP Servers, and listen on given port */
 try {
   Server.on('listening', () => {
