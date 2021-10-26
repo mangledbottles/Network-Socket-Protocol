@@ -29,6 +29,7 @@ const rl = readline.createInterface({
 function readLineAsync(message: string) {
   return new Promise((resolve, reject) => {
     rl.question(message, (answer: string) => {
+      if(answer == 'exit') return process.exit();
       broadcast(answer)
       resolve(answer);
     });
