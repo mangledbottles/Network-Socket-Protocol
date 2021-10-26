@@ -1,5 +1,6 @@
 import dgram from "dgram";
 import express, { Application, Request, Response } from "express";
+import * as readline from "readline";
 
 const app: Application = express();
 const socketPort: number = 8080;
@@ -18,6 +19,11 @@ Server.on('error', (err) => {
   console.log(`Server error:\n${err.stack}`);
   Server.close();
 });
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
 
 
 
