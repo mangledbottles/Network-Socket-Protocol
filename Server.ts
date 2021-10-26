@@ -1,3 +1,5 @@
+
+/** Import dependecies */
 import dgram from "dgram";
 import express, { Application, Request, Response } from "express";
 import * as readline from "readline";
@@ -20,7 +22,7 @@ Server.on('error', (err) => {
   Server.close();
 });
 
-/** Setup readline */
+/** Setup readline functionalities */
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -42,7 +44,7 @@ async function handleServerInput() {
 }
 
 
-/** Receive Messages */
+/** Receive Messages from Client */
 let messagesCount = 0;
 Server.on('message', (msg, rinfo) => {
   console.log(`Server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
@@ -62,7 +64,7 @@ Server.on('message', (msg, rinfo) => {
 });
 
 
-/** Periodically Broadcast Information from Server to all Clients */
+/** Broadcast Information from Server to all Clients */
 interface Client {
   address: string;
   port: number;
@@ -103,7 +105,7 @@ try {
   });
 
   Server.bind(socketPort, (): void => {
-    handleServerInput(); // used for broadcasting messages to Clients
+    handleServerInput(); // used to read IO from CLI and broadcast the message to Clients
     console.log(`UDP Datagram Server is active at http://localhost:${socketPort}`);
   });
 
