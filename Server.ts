@@ -19,12 +19,16 @@ Server.on('error', (err) => {
   Server.close();
 });
 
+
+
 /** Receive Messages */
+let messagesCount = 0;
 Server.on('message', (msg, rinfo) => {
   console.log(`Server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 
   /** Repeat message back to Client */
   Server.send(msg, rinfo.port, 'localhost', function (error) {
+  Server.send(Buffer.from(`Hello ${rinfo.port}, you are #${messagesCount++}, time is ${new Date()}`), rinfo.port, 'localhost', function (error) {
     if (error) {
       console.log(`Error sending data to Client #${rinfo.port}`)
     } else {
