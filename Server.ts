@@ -29,6 +29,7 @@ const rl = readline.createInterface({
 function readLineAsync(message: string) {
   return new Promise((resolve, reject) => {
     rl.question(message, (answer: string) => {
+      broadcast(answer)
       resolve(answer);
     });
   });
@@ -72,11 +73,13 @@ function newClient({ address, port }: Client) {
   return JSON.stringify({ address, port });
 }
 
-function broadcast() {
+function broadcast(broadcastMessage: string) {
   console.log("Broadcasting message to all Clients")
 
-  var message = Buffer.from("Server instructions to all Clients");
+  var message = Buffer.from(broadcastMessage);
   const ClientList = Array.from(Clients);
+  if(ClientList.length == 0) console.log("No active Clients");
+
   for (let clientNumber in ClientList) {
     const { address, port } = JSON.parse(ClientList[clientNumber]);
 
