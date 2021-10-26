@@ -26,6 +26,10 @@ let messagesCount = 0;
 Server.on('message', (msg, rinfo) => {
   console.log(`Server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
 
+  /** Add Client to Client List for Broadcasting */
+  const { address, port } = rinfo;
+  Clients.add(newClient({ address, port }));
+
   /** Repeat message back to Client */
   Server.send(msg, rinfo.port, 'localhost', function (error) {
   Server.send(Buffer.from(`Hello ${rinfo.port}, you are #${messagesCount++}, time is ${new Date()}`), rinfo.port, 'localhost', function (error) {
@@ -37,6 +41,16 @@ Server.on('message', (msg, rinfo) => {
   });
 });
 
+interface Client {
+  address: string;
+  port: number;
+}
+
+let Clients: Set<string> = new Set();
+
+function newClient({ address, port }: Client) {
+  return JSON.stringify({ address, port });
+}
 /** Launch UDP Socket and HTTP Servers, and listen on given port */
 try {
   Server.on('listening', () => {
