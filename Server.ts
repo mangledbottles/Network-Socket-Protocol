@@ -96,7 +96,7 @@ function broadcast(broadcastMessage: string) {
 
 /** Launch UDP Socket and HTTP Servers, and listen on given port */
 try {
-  Server.on('listening', () => {
+  Server.on('listening', (): void => {
     const address = Server.address();
     console.log(`Server listening ${address.address}:${address.port}`);
   });
@@ -110,5 +110,5 @@ try {
     console.log(`HTTP Server is active at http://localhost:8081`);
   });
 } catch (error: any) {
-  console.error(`An error occurred with message ${error.toString()}`);
+  console.error(`An error occurred with starting Server ${error.toString()}`);
 }
