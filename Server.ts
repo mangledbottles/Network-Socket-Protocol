@@ -31,7 +31,6 @@ Server.on('message', (msg, rinfo) => {
   Clients.add(newClient({ address, port }));
 
   /** Repeat message back to Client */
-  Server.send(msg, rinfo.port, 'localhost', function (error) {
   Server.send(Buffer.from(`Hello ${rinfo.port}, you are #${messagesCount++}, time is ${new Date()}`), rinfo.port, 'localhost', function (error) {
     if (error) {
       console.log(`Error sending data to Client #${rinfo.port}`)
@@ -81,7 +80,8 @@ try {
   });
 
   Server.bind(socketPort, (): void => {
-    console.log(`UDP Datagram Server is active at http://localhost:${port}`);
+    setInterval(broadcast, 5000);
+    console.log(`UDP Datagram Server is active at http://localhost:${socketPort}`);
   });
 
   app.listen(httpPort, (): void => {
