@@ -1,5 +1,6 @@
 import dgram from "dgram";
 import express, { Application, Request, Response } from "express";
+import * as readline from "readline";
 
 const app: Application = express();
 const socketPort: number = 8080;
@@ -19,6 +20,26 @@ Server.on('error', (err) => {
   Server.close();
 });
 
+/** Setup readline */
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
+
+function readLineAsync(message: string) {
+  return new Promise((resolve, reject) => {
+    rl.question(message, (answer: string) => {
+      if (answer == 'exit') return process.exit();
+      broadcast(answer) // broadcast user message to all listening Clients
+      resolve(answer);
+    });
+  });
+}
+
+async function handleServerInput() {
+  await readLineAsync("");
+  handleServerInput()
+}
 
 
 /** Receive Messages */
@@ -31,7 +52,7 @@ Server.on('message', (msg, rinfo) => {
   Clients.add(newClient({ address, port }));
 
   /** Repeat message back to Client */
-  Server.send(Buffer.from(`Hello ${rinfo.port}, you are #${messagesCount++}, time is ${new Date()}`), rinfo.port, 'localhost', function (error) {
+  Server.send(Buffer.from(`Hello ${rinfo.port}, you are #${messagesCount++}, time is ${new Date()}`), port, address, function (error) {
     if (error) {
       console.log(`Error sending data to Client #${rinfo.port}`)
     } else {
@@ -53,11 +74,13 @@ function newClient({ address, port }: Client) {
   return JSON.stringify({ address, port });
 }
 
-function broadcast() {
+function broadcast(broadcastMessage: string) {
   console.log("Broadcasting message to all Clients")
 
-  var message = Buffer.from("Server instructions to all Clients");
+  var message = Buffer.from(broadcastMessage);
   const ClientList = Array.from(Clients);
+  if (ClientList.length == 0) console.log("No active Clients");
+
   for (let clientNumber in ClientList) {
     const { address, port } = JSON.parse(ClientList[clientNumber]);
 
@@ -74,13 +97,13 @@ function broadcast() {
 
 /** Launch UDP Socket and HTTP Servers, and listen on given port */
 try {
-  Server.on('listening', () => {
+  Server.on('listening', (): void => {
     const address = Server.address();
     console.log(`Server listening ${address.address}:${address.port}`);
   });
 
   Server.bind(socketPort, (): void => {
-    setInterval(broadcast, 5000);
+    handleServerInput(); // used for broadcasting messages to Clients
     console.log(`UDP Datagram Server is active at http://localhost:${socketPort}`);
   });
 
@@ -88,5 +111,5 @@ try {
     console.log(`HTTP Server is active at http://localhost:8081`);
   });
 } catch (error: any) {
-  console.error(`An error occurred with message ${error.toString()}`);
+  console.error(`An error occurred with starting Server ${error.toString()}`);
 }
