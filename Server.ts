@@ -20,11 +20,24 @@ Server.on('error', (err) => {
   Server.close();
 });
 
+/** Setup readline */
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 })
 
+function readLineAsync(message: string) {
+  return new Promise((resolve, reject) => {
+    rl.question(message, (answer: string) => {
+      resolve(answer);
+    });
+  });
+} 
+
+async function handleServerInput() {
+  await readLineAsync("");
+  handleServerInput()
+}
 
 
 /** Receive Messages */
@@ -86,7 +99,7 @@ try {
   });
 
   Server.bind(socketPort, (): void => {
-    setInterval(broadcast, 5000);
+    handleServerInput(); // used for broadcasting messages to Clients
     console.log(`UDP Datagram Server is active at http://localhost:${socketPort}`);
   });
 
