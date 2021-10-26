@@ -7,7 +7,6 @@ const httpPort: number = 8081;
 
 /** HTTP Server for checking status */
 app.get('/', (req: Request, res: Response) => {
-  ``
   res.send({ message: 'Server is active', timestamp: new Date() });
 });
 
